@@ -1,0 +1,30 @@
+package newslink.demo.Controllers;
+
+public enum EnglishKeyWords {
+     and,
+    or,
+    the,
+    be,
+    to,
+    of,
+    a,
+    in,
+    have,
+    it,
+    not,
+    with,
+    but,
+    they,
+    on,
+    as,
+    had,
+    one,
+    which,
+    make,
+    find,
+    two,
+    was,
+    all,
+    com,
+
+}

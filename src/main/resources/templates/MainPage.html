@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/stylesheet.css">
+
+</head>
+<body>
+<header>
+    <nav>
+        <div class="logo">
+            NewsLink
+        </div>
+
+
+
+    </nav>
+</header>
+<div class="big-container">
+<div class="container">
+<div class="container-small">
+
+</div>
+    <div class="article">
+        <div class="article-content">
+            <h2>Sport Articles</h2>
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" th:style="'width:'+${sport}+'%'">
+                    <span class="sr-only">70% Complete</span>
+                </div>
+            </div>
+
+            <h2>World Articles</h2>
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" th:style="'width:'+${world}+'%'">
+                    <span class="sr-only">70% Complete</span>
+                </div>
+            </div>
+            <h2>Culture Articles</h2>
+            <div class="progress">
+                <div class="progress-bar " role="progressbar" th:style="'width:'+${kultur}+'%'">
+                    <span class="sr-only">70% Complete</span>
+                </div>
+            </div>
+            <h2>Feed Articles</h2>
+            <div class="progress">
+                <div class="progress-bar " role="progressbar" th:style="'width:'+${feed}+'%'">
+                    <span class="sr-only">70% Complete</span>
+                </div>
+            </div>
+            <h3 th:text="'Articles seen: '+${checkedArticles}"></h3>
+
+        </div>
+    </div>
+
+
+    <div class="article">
+        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+            <i class="fa fa-question"></i>
+        </button>
+        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseProfile" aria-expanded="false" aria-controls="collapseExample">
+            <i class="fa fa-user"></i>
+        </button>
+        <div class="collapse" id="collapseExample">
+            <div class="card card-body">
+                <p> <span class="bold">Do you need help figuring out NewsLink?</span></p>
+                <p>Search for specific media outlets or keywords to pinpoint the news you want today.</p>
+                <p>By liking the articles they'll appear in your likebox. You can easily copy to clipboard and share them with your friends. </p>
+                <p>The bars to your left is your like to dislike ratio to specific genres.</p>
+                <p>Since this site works solely on cookies, by deleting your cookies. You'll also delete your history! </p>
+                <span class="bold">Thank you and enjoy NewsLink!</span>
+            </div>
+        </div>
+        <div class="collapse" id="collapseProfile">
+            <div class="card card-body">
+                <form class="con" th:action="@{/me}" method="post" th:object="${person}" autocomplete="off">
+
+                    <p>Please fill in this information.</p>
+                    <div class="form-group">
+                        <label class="custom-control custom-radio">Male:
+                            <input type="radio"
+                                   name="gender"
+                                   class="custom-control-input"
+                                   th:field="${person.gender}"
+                                   th:value="Male"
+                                   placeholder="Enter gender"/>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="custom-control custom-radio">Female:
+                            <input type="radio"
+                                   name="gender"
+                                   class="custom-control-input"
+                                   th:field="${person.gender}"
+                                   th:value="Female"
+                                   placeholder="Enter gender"/>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="custom-control custom-radio">Non-binary:
+                            <input type="radio"
+                                   name="gender"
+                                   class="custom-control-input"
+                                   th:field="${person.gender}"
+                                   th:value="NonBinary"
+                                   placeholder="Enter gender"/>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="custom-control custom-radio">Other:
+                            <input type="radio"
+                                   class="custom-control-input"
+                                   name="gender"
+                                   th:field="${person.gender}"
+                                   th:value="Other"
+                                   placeholder="Enter gender"/>
+                            <input name="gender"
+                                   class="custom-control-input"
+                                   type="String"
+                                   th:field="${person.gender}"
+                                   placeholder="Enter gender"/>
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label >Birth Date: </label>
+                        <input name="age"
+                               type="date"
+                               min="1930-01-01"
+                               max="2009-01-01"
+                               th:value="${person.age}"
+                               placeholder="Enter age">
+                    </div>
+
+
+                    <button type="submit" class="btn btn-success">Confirm</button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+
+    <form th:action="@{/}" class="container-small">
+        <div class="form-outline">
+            <input type="text" name="keyword" id="keyword" class="form-control" th:value="${keyword}"/>
+        </div>
+        <button type="submit"class="btn btn-primary">
+            <i class="fa fa-search"></i>
+        </button>
+    </form>
+
+
+
+
+
+
+
+        <div th:each="article : ${news}" class="article"  th:unless="${article.doIExistInList(likedList) || article.doIExistInList(dislikedList)}">
+
+            <div class="heart-container">
+                <form th:action="@{/like/{id}(id=${article.id})}" >
+
+                        <input type="hidden" name="keyword" th:value="${keyword}"/>
+
+                    <button type="submit" class="butt">
+                        <i class="fa fa-heart-o fa-2x heart"></i>
+                    </button>
+                </form>
+                <form th:action="@{/dislike/{id}(id=${article.id})}" >
+
+                    <input type="hidden" name="keyword" th:value="${keyword}"/>
+
+                    <button type="submit" class="butt">
+                        <i class="fa fa-trash-o fa-2x" aria-hidden="true"></i>
+                    </button>
+                </form>
+
+            </div>
+
+            <div class="article-content">
+                <h2 th:text="${article.title}"></h2>
+                <p th:text="${article.pubDate}"></p>
+                <a th:text="${article.link}" th:href="${article.link}"></a>
+
+            </div>
+
+        </div>
+
+
+
+
+
+
+</div>
+
+<div class="container">
+    <form class="container-small">
+        <div class="form-outline">
+            <label type="text"  class="form-control">Copy liked news to clipboard.</label>
+        </div>
+
+        <a th:href="@{/copy}" class="btn btn-primary" href="#" role="button"><i class="fa fa-copy"></i></a>
+
+    </form>
+
+
+    <div class="overflow-auto" id="scrolldiv">
+        <div th:each="article : ${likedList}" class="article"  th:unless="${article.doIExistInList(dislikedList)}">
+            <div class="heart-container">
+
+                <a th:href="@{/{id}(id=${article.id})}"> <i class="fa fa-heart fa-2x heart filled"></i></a>
+            </div>
+
+            <div class="article-content">
+                <h2 th:text="${article.title}"></h2>
+                <p th:text="${article.pubDate}"></p>
+                <a th:text="${article.link}" th:href="${article.link}"></a>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+</div>
+
+
+<!--<div class="container">-->
+
+<!--    <div class="article" th:each="article : ${likedList}">-->
+<!--        <div class="heart-container">-->
+<!--            <a th:href="@{/{id}(id=${article.id})}"> <i class="fa fa-heart fa-2x heart filled"></i></a>-->
+<!--        </div>-->
+
+<!--        <div class="article-content">-->
+<!--            <h3 th:text="${article.title}"></h3>-->
+<!--            <p th:text="${article.pubDate}"></p>-->
+<!--            <a th:text="${article.link}" th:href="${article.link}"></a>-->
+
+<!--        </div>-->
+<!--    </div>-->
+
+<!--</div>-->
+<script>
+
+    const scrollDiv = document.getElementById("scrolldiv");
+
+    scrollDiv.addEventListener('scroll', () => {
+        const scrolled = scrollDiv.scrollTop;
+        console.log(scrolled);
+        document.cookie = "scroll="+scrolled+"";
+    })
+
+    function getCookie(cname) {
+        var name = cname + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for(var i = 0; i <ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
+
+    function getScroll() {
+        scrollDiv.style.display = 'block';
+        const y = parseInt(getCookie("scroll").valueOf(), 10);
+        scrollDiv.scrollTo(0, y);
+
+    }
+
+    window.onload = getScroll;
+
+
+</script>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+</body>
+</html>
